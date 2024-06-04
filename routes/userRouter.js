@@ -1,0 +1,41 @@
+const express = require("express");
+const User = require("../models/userModel");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+const router = express.Router();
+
+router.post("/register", async (req, res) => {
+  const { username, email, password, role } = req.body;
+  try {
+    const hashPassword = bcrypt.hashSync(password, 8);
+    const isUserExist = await User.findOne({ email: email });
+    if (isUserExist) {
+      return res
+        .status(500)
+        .json({ message: "This user is alreday registered" });
+    }
+    const user = new User({ username, email, password: hashPassword, role });
+    await user.save();
+    res.status(201).json({ message: "Registered sucessfully", user });
+  } catch (err) {
+    res.status(404).json({ error: err.message });
+  }
+});
+
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    const checkPassword = bcrypt.compareSync(password, user.password);
+    if (!user || !checkPassword) {
+      return res.status(404).json({ error: "Invalid Credentials" });
+    }
+    const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY);
+    res.json({ Message: "Login sucessfully", token });
+  } catch (err) {
+    res.status(404).json({ error: err.message });
+  }
+});
+
+module.exports = router;
