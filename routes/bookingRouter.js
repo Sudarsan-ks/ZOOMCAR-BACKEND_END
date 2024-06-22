@@ -32,11 +32,10 @@ router.post("/add-booking", async (req, res) => {
       totalPrice: TotalPrice,
     });
     await newbooking.save();
-    await User.updateOne(
-      { _id: user },
-      { $push: { bookings: newbooking.id } }
-    );
-    res.status(201).json("Booked Sucessfully");
+    await User.updateOne({ _id: user }, { $push: { bookings: newbooking.id } });
+    res
+      .status(201)
+      .json({ bookingID: newbooking._id, message: "Booked Sucessfully" });
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
