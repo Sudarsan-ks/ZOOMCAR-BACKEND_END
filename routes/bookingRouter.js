@@ -6,17 +6,6 @@ const router = express.Router();
 
 router.post("/add-booking", async (req, res) => {
   const { user, vehicle, startDate, endDate, totalPrice } = req.body;
-
-  function differncebetweendates(sDate, eDate) {
-    const start = new Date(sDate);
-    const end = new Date(eDate);
-    const milliSeconds = end - start;
-    const Difference = milliSeconds / (1000 * 60 * 60 * 24);
-    return Difference;
-  }
-
-  const TotalPrice = differncebetweendates(startDate, endDate) * totalPrice;
-
   try {
     const isBooking = await Booking.findOne({ user: user, vehicle: vehicle });
     if (isBooking) {
@@ -29,7 +18,7 @@ router.post("/add-booking", async (req, res) => {
       vehicle,
       startDate,
       endDate,
-      totalPrice: TotalPrice,
+      totalPrice
     });
     await newbooking.save();
     await User.updateOne({ _id: user }, { $push: { bookings: newbooking.id } });
