@@ -14,6 +14,9 @@ router.post("/add-payment", async (req, res) => {
 
   try {
     const payment = {
+      user,
+      booking,
+      currency,
       amount,
       currency,
     };
