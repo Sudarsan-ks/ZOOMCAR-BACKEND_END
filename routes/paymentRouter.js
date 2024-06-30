@@ -1,34 +1,40 @@
 const express = require("express");
 const Payment = require("../models/paymentModel");
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const Razorpay = require("razorpay");
 
 const router = express.Router();
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
 
 router.post("/add-payment", async (req, res) => {
   const { user, booking, amount, currency, paymentMethodId } = req.body;
 
   try {
-    const paymentIntent = await stripe.paymentIntents.create({
+    const payment = {
       amount,
       currency,
-      payment_method: paymentMethodId,
-      confirm: true,
-      return_url: "https://localhost:5000",
-    });
+    };
+    const razorpayOrder = await razorpay.orders.create(payment);
 
     const newPayment = new Payment({
       user,
       booking,
       amount,
       currency,
-      paymentMethodId: paymentIntent.id,
-      status: paymentIntent.status,
+      paymentMethodId: razorpayOrder.id,
     });
     await newPayment.save();
 
-    res.status(200).json({ paymentIntent });
-  } catch (err) {
-    return res.status(500).json({ message: err.message });
+    res.json({
+      orderId: razorpayOrder.id,
+      amount: razorpayOrder.amount,
+      currency: razorpayOrder.currency,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 

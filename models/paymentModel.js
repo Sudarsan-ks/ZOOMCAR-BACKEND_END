@@ -20,6 +20,7 @@ const paymentSchema = mongoose.Schema(
       default: "pending",
     },
     paymentMethodId: { type: String, required: true },
+    razorpayPaymentId: { type: String }, 
   },
   {
     timestamps: true,
