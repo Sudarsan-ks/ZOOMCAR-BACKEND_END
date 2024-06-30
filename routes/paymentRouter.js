@@ -18,7 +18,6 @@ router.post("/add-payment", async (req, res) => {
       booking,
       currency,
       amount,
-      currency,
     };
     const razorpayOrder = await razorpay.orders.create(payment);
 
