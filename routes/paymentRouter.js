@@ -10,7 +10,7 @@ const razorpay = new Razorpay({
 });
 
 router.post("/add-payment", async (req, res) => {
-  const { user, booking, amount, currency, paymentMethodId } = req.body;
+  const { user, booking, amount, currency } = req.body;
 
   try {
     const payment = {
