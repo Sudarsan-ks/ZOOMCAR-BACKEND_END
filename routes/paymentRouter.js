@@ -16,10 +16,10 @@ router.post("/add-payment", async (req, res) => {
 
   try {
     const payment = {
-      amount,
+      amount: currency === "INR" ? amount * 100 : amount,
       currency,
     };
-    console.log(payment)
+    console.log(payment);
     const Order = await razorpay.orders.create(payment);
     if (!Order) {
       res.status(500).json({ error: error.message });
@@ -35,8 +35,7 @@ router.post("/add-payment", async (req, res) => {
     await newPayment.save();
 
     res.json(Order);
-    console.log("res", Order)
-
+    console.log("res", Order);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
