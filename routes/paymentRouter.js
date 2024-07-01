@@ -19,7 +19,6 @@ router.post("/add-payment", async (req, res) => {
       amount: currency === "INR" ? amount * 100 : amount,
       currency,
     };
-    console.log(payment);
     const Order = await razorpay.orders.create(payment);
     if (!Order) {
       res.status(500).json({ error: error.message });
@@ -35,7 +34,7 @@ router.post("/add-payment", async (req, res) => {
     await newPayment.save();
 
     res.json(Order);
-    console.log("res", Order);
+    
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -62,28 +61,5 @@ router.get("/get-payment/:id", async (req, res) => {
   }
 });
 
-router.put("/edit-payment/:id", async (req, res) => {
-  try {
-    const payment = await Payment.findByIdAndUpdate(req.params.id, req.body);
-    if (!payment) {
-      return res.status(400).json({ message: "No such payment found" });
-    }
-    res.json(payment);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-router.delete("/delete-payment/:id", async (req, res) => {
-  try {
-    const payment = await Payment.findByIdAndDelete(req.params.id);
-    if (!payment) {
-      return res.status(400).json({ message: "No such payment found" });
-    }
-    res.json({ message: "Payment deleted Sucessfully" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
 
 module.exports = router;
