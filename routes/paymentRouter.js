@@ -1,40 +1,42 @@
 const express = require("express");
 const Payment = require("../models/paymentModel");
 const Razorpay = require("razorpay");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const router = express.Router();
 
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
-
 router.post("/add-payment", async (req, res) => {
+  const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+  });
+
   const { user, booking, amount, currency } = req.body;
 
   try {
     const payment = {
-      user,
-      booking,
+      amount,
       currency,
-      amount: currency === "INR" ? amount * 100 : amount,
     };
-    const razorpayOrder = await razorpay.orders.create(payment);
+    console.log(payment)
+    const Order = await razorpay.orders.create(payment);
+    if (!Order) {
+      res.status(500).json({ error: error.message });
+    }
 
     const newPayment = new Payment({
       user,
       booking,
       amount,
       currency,
-      paymentMethodId: razorpayOrder.id,
+      paymentMethodId: Order.id,
     });
     await newPayment.save();
 
-    res.json({
-      orderId: razorpayOrder.id,
-      amount: razorpayOrder.amount,
-      currency: razorpayOrder.currency,
-    });
+    res.json(Order);
+    console.log("res", Order)
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
