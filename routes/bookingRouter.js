@@ -21,7 +21,7 @@ router.post("/add-booking", async (req, res) => {
       totalPrice
     });
     await newbooking.save();
-    await User.updateOne({ _id: user }, { $push: { bookings: newbooking } });
+    await User.updateOne({ _id: user }, { $push: { bookings: newbooking._id } });
     res
       .status(201)
       .json({ bookingID: newbooking._id, message: "Booked Sucessfully" });
