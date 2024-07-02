@@ -22,7 +22,7 @@ router.post("/add-review", async (req, res) => {
     await newReview.save();
     await Vehicle.updateOne(
       { _id: vehicle },
-      { $push: { review: newReview.id } }
+      { $push: { review: newReview } }
     );
     res.status(201).json("Reviewed Sucessfully");
   } catch (err) {
