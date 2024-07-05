@@ -13,11 +13,11 @@ router.post("/register", async (req, res) => {
     if (isUserExist) {
       return res
         .status(500)
-        .json({ message: "This user is alreday registered" });
+        .json({ message: "This email is alreday registered" });
     }
-    const user = new User({ username, email, password: hashPassword, role });
-    await user.save();
-    res.status(201).json({ message: "Registered sucessfully", user });
+    const newUser = new User({ username, email, password: hashPassword, role });
+    await newUser.save();
+    res.status(201).json({ message: "Registered sucessfully", newUser });
   } catch (err) {
     res.status(404).json({ error: err.message });
   }
