@@ -1,6 +1,6 @@
 const express = require("express");
 const Vehicle = require("../models/vehicleModel");
-const auth = require("./auth")
+const auth = require("./auth");
 
 const router = express.Router();
 
@@ -14,7 +14,7 @@ router.post("/add-vehicle", async (req, res) => {
   }
 });
 
-router.get("/get-vehicle",auth, async (req, res) => {
+router.get("/get-vehicle", auth, async (req, res) => {
   try {
     const vehicles = await Vehicle.find();
     res.json(vehicles);
