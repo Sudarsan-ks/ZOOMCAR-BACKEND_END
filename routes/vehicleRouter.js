@@ -1,9 +1,10 @@
 const express = require("express");
 const Vehicle = require("../models/vehicleModel");
+import { auth } from "../auth.js";
 
 const router = express.Router();
 
-router.post("/add-vehicle", async (req, res) => {
+router.post("/add-vehicle", auth, async (req, res) => {
   try {
     const newVechile = new Vehicle(req.body);
     await newVechile.save();
@@ -44,12 +45,10 @@ router.get("/get-vehicle/brand/:brand", async (req, res) => {
     }
     res.json(vehicles);
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        message: "An error occurred while fetching vehicles",
-        error: err.message,
-      });
+    res.status(500).json({
+      message: "An error occurred while fetching vehicles",
+      error: err.message,
+    });
   }
 });
 
@@ -63,12 +62,10 @@ router.get("/get-vehicle/model/:model", async (req, res) => {
     }
     res.json(vehicles);
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        message: "An error occurred while fetching vehicles",
-        error: err.message,
-      });
+    res.status(500).json({
+      message: "An error occurred while fetching vehicles",
+      error: err.message,
+    });
   }
 });
 
@@ -82,12 +79,10 @@ router.get("/get-vehicle/category/:category", async (req, res) => {
     }
     res.json(vehicles);
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        message: "An error occurred while fetching vehicles",
-        error: err.message,
-      });
+    res.status(500).json({
+      message: "An error occurred while fetching vehicles",
+      error: err.message,
+    });
   }
 });
 
@@ -101,12 +96,10 @@ router.get("/get-vehicle/year/:year", async (req, res) => {
     }
     res.json(vehicles);
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        message: "An error occurred while fetching vehicles",
-        error: err.message,
-      });
+    res.status(500).json({
+      message: "An error occurred while fetching vehicles",
+      error: err.message,
+    });
   }
 });
 
@@ -122,12 +115,10 @@ router.get("/get-vehicle/price/:pricePerDay", async (req, res) => {
     }
     res.json(vehicles);
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        message: "An error occurred while fetching vehicles",
-        error: err.message,
-      });
+    res.status(500).json({
+      message: "An error occurred while fetching vehicles",
+      error: err.message,
+    });
   }
 });
 
