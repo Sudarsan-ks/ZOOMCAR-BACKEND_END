@@ -1,6 +1,6 @@
 const express = require("express");
 const Vehicle = require("../models/vehicleModel");
-import { auth } from "./auth.js";
+import { auth } from "./auth";
 
 const router = express.Router();
 
