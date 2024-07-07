@@ -8,7 +8,7 @@ const router = express.Router();
 router.post("/register", async (req, res) => {
   const { username, email, password, role } = req.body;
   try {
-    const hashPassword = bcrypt.hashSync(password, 8);
+    const hashPassword = await bcrypt.hash(password, 8);
     const isUserExist = await User.findOne({ email: email });
     if (isUserExist) {
       return res
@@ -27,7 +27,7 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    const checkPassword = bcrypt.compareSync(password, user.password);
+    const checkPassword = await bcrypt.compare(password, user.password);
     if (!user || !checkPassword) {
       return res.status(404).json({ error: "Invalid Credentials" });
     }
