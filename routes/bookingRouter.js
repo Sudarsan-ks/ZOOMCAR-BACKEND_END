@@ -1,6 +1,7 @@
 const express = require("express");
 const Booking = require("../models/bookingModel");
 const User = require("../models/userModel");
+const auth = require("./auth");
 
 const router = express.Router();
 
@@ -18,10 +19,13 @@ router.post("/add-booking", async (req, res) => {
       vehicle,
       startDate,
       endDate,
-      totalPrice
+      totalPrice,
     });
     await newbooking.save();
-    await User.updateOne({ _id: user }, { $push: { bookings: newbooking._id } });
+    await User.updateOne(
+      { _id: user },
+      { $push: { bookings: newbooking._id } }
+    );
     res
       .status(201)
       .json({ bookingID: newbooking._id, message: "Booked Sucessfully" });
@@ -30,9 +34,15 @@ router.post("/add-booking", async (req, res) => {
   }
 });
 
-router.get("/get-booking", async (req, res) => {
+router.get("/get-booking", auth, async (req, res) => {
+  const userID = req.user._id;
   try {
-    const booking = await Booking.find().populate("user vehicle");
+    const booking = await Booking.find({ user: userID }).populate(
+      "user vehicle"
+    );
+    if(booking.length===0){
+      return res.status(500).json({message:"No booking found for the particular user."})
+    }
     res.json(booking);
   } catch (err) {
     res.status(500).json({ message: err.message });
